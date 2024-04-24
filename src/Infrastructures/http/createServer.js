@@ -1,9 +1,20 @@
 const Hapi = require('@hapi/hapi');
+const HapiSwagger = require('hapi-swagger');
+const Inert = require('@hapi/inert');
+const Vision = require('@hapi/vision');
+
 const ClientError = require('../../Commons/exceptions/ClientError');
 const DomainErrorTranslator = require('../../Commons/exceptions/DomainErrorTranslator');
 const users = require('../../Interfaces/http/api/users');
 const authentications = require('../../Interfaces/http/api/authentications');
 const config = require('../../Commons/config');
+
+const swaggerOptions = {
+  info: {
+    title: 'Auth API Documentation',
+    version: '1.0.0',
+  },
+};
 
 const createServer = async (container) => {
   const server = Hapi.server({
@@ -20,6 +31,16 @@ const createServer = async (container) => {
     {
       plugin: authentications,
       options: { container },
+    },
+    {
+      plugin: Inert,
+    },
+    {
+      plugin: Vision,
+    },
+    {
+      plugin: HapiSwagger,
+      options: swaggerOptions,
     },
   ]);
 
